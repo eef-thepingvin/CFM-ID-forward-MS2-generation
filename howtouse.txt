@@ -1,0 +1,4 @@
+1) Obtain .msp from CFM-ID (from batch mode using Docker image and PowerShell)
+2) Run cfmid.jl
+3) Load .msp file and choose ionisation mode
+3) Julia output is now ready for import into mzVault

@@ -1,0 +1,2 @@
+2-Hydroxysimazine	CCNC1=NC(=NC(=O)N1)NCC
+Fuberidazole_TP_M01	C1=CC=C2C(=C1)NC(=N2)C(=O)O

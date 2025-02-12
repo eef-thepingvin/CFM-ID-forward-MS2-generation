@@ -1,0 +1,17 @@
+1) Install Docker Desktop - log in.
+
+2) Open Windows PowerShell
+
+3) Create folder and connect to folder:
+cd C:\Users\emefro\Desktop\Files\PhD\Julia\CFM-ID
+
+4) Create compoundList.txt storing names and SMILES
+
+5) docker run --rm=true -v ${pwd}:/cfmid/public/ -i wishartlab/cfmid:latest sh -c "cd /cfmid/public/; cfm-predict compoundList.txt 0.001 /trained_models_cfmid4.0/[M+H]+/param_output.log /trained_models_cfmid4.0/[M+H]+/param_config.txt 1 cfm-id-output-pos.msp"
+
+6) Import .msp into matlab script and run.
+
+7) Import matlab output.msp into mzVault 2.3
+
+8) When running mzCloud enable mzVault node and configure as follows:
+set all settings to false where possible
