@@ -1,0 +1,44 @@
+Merging .db dublicate entries using DB Browser for SQLite and MATLAB:
+
+
+Step 1: Generate a copy .db file and open in DB Browser for SQLite:
+Replace NULL values with 1:
+
+UPDATE CompoundTable SET mzCloudId = 1
+UPDATE SpectrumTable SET blobNoises = 1
+
+Step 2: Open .db file in MATLAB and run script
+
+Step 3: Open modified .db file in SQLiteStudio and copy CompoundRowRemove, newIDX, and SpectrumIDs tables to original .db file
+
+Step 4: Copy and overwrite the values from SpectrumIDs.NewIDs to SpectrumTable.CompoundId:
+
+UPDATE SpectrumTable
+SET CompoundId = (SELECT SpectrumIDs.NewIDs FROM SpectrumIDs WHERE SpectrumTable.SpectrumId = SpectrumIDs.ROWID)
+
+Step 5: Remove SpectrumTable Foreign Constraint Key.
+
+Step 6: Delete rows from CompoundTable:
+
+DELETE FROM CompoundTable
+WHERE CompoundId IN (SELECT removeIdx FROM CompoundRowRemove)
+
+Step 7: Change CompoundTable.CompoundId Data Type to double
+
+Step 8: Copy and overwrite values from newIDX to CompoundTable.CompoundId:
+
+UPDATE CompoundTable
+SET CompoundId = (SELECT newIDX.NewIdx FROM newIDX WHERE CompoundTable.ROWID = newIDX.ROWID)
+
+Step 9: Change CompoundTable.CompoundId Data Type to INTEGER
+
+Step 10: Add SpectrumTable Foreign Constraint Key -> CompoundTable + CompoundId
+
+Step 11: Delete tables: newIDX, SpectrumIDs, and CompoundRowRemove
+
+Step 12: Readd renamed column values
+
+UPDATE CompoundTable SET mzCloudId = NULL
+UPDATE SpectrumTable SET blobNoises = NULL
+
+Step 13: PROFIT!!
