@@ -35,26 +35,23 @@ dataList=readlines(filename)
 println("Step 1 of 5: Performing string replacement of $(length(dataList)) lines")
 
 #String replacement
-for i in eachindex(dataList)
-    dataList[i]=replace(dataList[i],"_" => " ");
-    dataList[i]=replace(dataList[i],"+ve in-silico MS/MS by CFM-ID 4.4.7 for " => "");
-    dataList[i]=replace(dataList[i],"-ve in-silico MS/MS by CFM-ID 4.4.7 for " => ""); 
-    dataList[i]=replace(dataList[i],"Comment:" => "Collision_energy:");
-    dataList[i]=replace(dataList[i],"Energy0" => "10V\nIonMode:\nFormula: \nAdduct:\nPrecursorMz: \nInChIKey: \nInChI: \nComments:");
-    dataList[i]=replace(dataList[i],"Energy1" => "20V\nIonMode:\nFormula: \nAdduct:\nPrecursorMz: \nInChIKey: \nInChI: \nComments:");
-    dataList[i]=replace(dataList[i],"Energy2" => "40V\nIonMode:\nFormula: \nAdduct:\nPrecursorMz: \nInChIKey: \nInChI: \nComments:");
-    dataList[i]=replace(dataList[i],"Smiles/Inchi:" => "SMILES: ");
-    dataList[i]=replace(dataList[i],"Comments:" => "Comment: In-silico MS/MS prediction by CFM-ID 4.4.7");
-    
-        if contains(mode,"positive")
-            dataList[i]=replace(dataList[i],"IonMode:" => "IonMode: positive");
-            dataList[i]=replace(dataList[i],"Adduct:" => "Precursor_type: [M+H]+"); 
-        else
-            dataList[i]=replace(dataList[i],"IonMode:" => "IonMode: negative");
-            dataList[i]=replace(dataList[i],"Adduct:" => "Precursor_type: [M-H]-"); 
-        end
-    dataList[i]=dataList[i]*"\n"
-end
+dataList=replace.(dataList,"_" => " ");
+dataList=replace.(dataList,"+ve in-silico MS/MS by CFM-ID 4.4.7 for " => "");
+dataList=replace.(dataList,"-ve in-silico MS/MS by CFM-ID 4.4.7 for " => ""); 
+dataList=replace.(dataList,"Comment:" => "Collision_energy:");
+dataList=replace.(dataList,"Energy0" => "10V\nIonMode:\nFormula: \nAdduct:\nPrecursorMz: \nInChIKey: \nInChI: \nComments:");
+dataList=replace.(dataList,"Energy1" => "20V\nIonMode:\nFormula: \nAdduct:\nPrecursorMz: \nInChIKey: \nInChI: \nComments:");
+dataList=replace.(dataList,"Energy2" => "40V\nIonMode:\nFormula: \nAdduct:\nPrecursorMz: \nInChIKey: \nInChI: \nComments:");
+dataList=replace.(dataList,"Smiles/Inchi:" => "SMILES: ");
+dataList=replace.(dataList,"Comments:" => "Comments: In-silico MS/MS prediction by CFM-ID 4.4.7");
+    if contains(mode,"positive")
+        dataList=replace.(dataList,"IonMode:" => "IonMode: positive");
+        dataList=replace.(dataList,"Adduct:" => "Precursor_type: [M+H]+"); 
+    else
+        dataList=replace.(dataList,"IonMode:" => "IonMode: negative");
+        dataList=replace.(dataList,"Adduct:" => "Precursor_type: [M-H]-"); 
+    end
+dataList=dataList.*"\n"
 
 #Saving and reimporting list of lines
 write("temp.msp",join(dataList)) #generates temporary data file;
@@ -64,9 +61,7 @@ rm("temp.msp") #deletes temporary data file
 #Extracting SMILES
 smilesIdx=findall( x -> occursin("SMILES: ", x), dataList)
 smiles=dataList[smilesIdx]
-for i in eachindex(smiles)
-    smiles[i]=replace(smiles[i],"SMILES: " => "")
-end
+smiles=replace.(smiles,"SMILES: " => "")
 
 #Calculates monoisotopic mass
 println("Step 2 of 5: Calculating $(length(smiles)) molblocks")
@@ -114,9 +109,7 @@ for i in eachindex(a)
 end
 
 #Prepares datalist for writelines in Julia by join-function
-for i in eachindex(dataList)
-   dataList[i]=dataList[i]*"\n"
-end
+dataList=dataList.*"\n"
 
 write(replace(filename,".msp" => "_Julia_cleanup_DONE.msp"),join(dataList));
 println("Convertion done!")
